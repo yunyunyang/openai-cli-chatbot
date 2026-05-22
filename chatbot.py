@@ -70,7 +70,7 @@ while True:
             assistant_message = response.choices[0].message
 
     # Store assistant response
-    messages.append({"role": "assistant", "content": assistant_message.content})
+    messages.append({"role": "assistant", "content": assistant_message.content or ""})
 
     print(f"AI: {assistant_message.content}\n")
     print("========================================\n")
