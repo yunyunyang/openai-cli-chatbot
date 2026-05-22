@@ -64,7 +64,7 @@ while True:
             )
 
             response = client.chat.completions.create(
-                model="gpt-4o-mini", messages=messages
+                model="gpt-4o-mini", messages=messages, tools=tools
             )
 
             assistant_message = response.choices[0].message
