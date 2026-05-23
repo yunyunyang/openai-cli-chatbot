@@ -2,7 +2,21 @@ import json
 import os
 
 from openai import OpenAI
-from tools import tools, tool_functions
+from tools.weather import (
+    tools as weather_tools,
+    tool_functions as weather_tool_functions,
+)
+from tools.filesystem import (
+    tools as filesystem_tools,
+    tool_functions as filesystem_tool_functions,
+)
+
+tools = weather_tools + filesystem_tools
+
+tool_functions = {
+    **weather_tool_functions,
+    **filesystem_tool_functions,
+}
 
 API_KEY = os.environ.get("API_KEY")
 BASE_URL = os.environ.get("BASE_URL")
@@ -36,16 +50,19 @@ while True:
     # Store user message to maintain conversation context
     messages.append({"role": "user", "content": user_input})
 
-    # Send full chat history to the model.
-    response = client.chat.completions.create(
-        model="gpt-4o-mini", messages=messages, tools=tools
-    )
+    while True:
 
-    # Extract the model's response and append it to the conversation history
-    assistant_message = response.choices[0].message
+        # Send full chat history to the model.
+        response = client.chat.completions.create(
+            model="gpt-4o-mini", messages=messages, tools=tools
+        )
 
-    # Tool calling
-    if assistant_message.tool_calls:
+        # Extract the model's response and append it to the conversation history
+        assistant_message = response.choices[0].message
+
+        # Tool calling
+        if not assistant_message.tool_calls:
+            break
 
         messages.append(assistant_message)
 
