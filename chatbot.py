@@ -21,6 +21,8 @@ tool_functions = {
 API_KEY = os.environ.get("API_KEY")
 BASE_URL = os.environ.get("BASE_URL")
 
+DEFAULT_MODEL = "gpt-4o-mini"
+
 if not API_KEY or not BASE_URL:
     raise RuntimeError("Missing API_KEY or BASE_URL environment variable.")
 
@@ -54,7 +56,7 @@ while True:
 
         # Send full chat history to the model.
         response = client.chat.completions.create(
-            model="gpt-4o-mini", messages=messages, tools=tools
+            model=DEFAULT_MODEL, messages=messages, tools=tools
         )
 
         # Extract the model's response and append it to the conversation history
@@ -81,7 +83,7 @@ while True:
             )
 
             response = client.chat.completions.create(
-                model="gpt-4o-mini", messages=messages, tools=tools
+                model=DEFAULT_MODEL, messages=messages, tools=tools
             )
 
             assistant_message = response.choices[0].message
